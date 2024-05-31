@@ -62,17 +62,16 @@ public class MainActivity extends AppCompatActivity {
                 int distance = LevenshteinDistance.computeLevenshteinDistance(ctc_output, str2);
                 double similarity = LevenshteinDistance.similarity(ctc_output, str2);
 
-                String url = "https://ai-service.aiwell.tw/get_phoneme.php?version=3";
-                JsonReader.readJsonFromUrl(url, new JsonReader.JsonResponseCallback() {
-                    @Override
-                    public void onJsonResponse(String jsonResponse) {
-                        // Handle the JSON response here
-                        Log.d(TAG, "JSON response: " + jsonResponse);
-                        // You can also update UI elements here with the jsonResponse
-                        String [][] json_data = JsonReader.convertList(jsonResponse);
-                        double[][] simi_matrix = LevenshteinDistance.similarity_matrix(json_data, ctc_output);
-                    }
-                });
+//                JsonReader.readJsonFromUrl(url, new JsonReader.JsonResponseCallback() {
+//                    @Override
+//                    public void onJsonResponse(String jsonResponse) {
+//                        // Handle the JSON response here
+//                        Log.d(TAG, "JSON response: " + jsonResponse);
+//                        // You can also update UI elements here with the jsonResponse
+//                        String [][] json_data = JsonReader.convertList(jsonResponse);
+//                        double[][] simi_matrix = LevenshteinDistance.similarity_matrix(json_data, ctc_output);
+//                    }
+//                });
             } else {
                 Toast.makeText(this, "audioData 回傳錯誤" , Toast.LENGTH_SHORT).show();
                 // 處理讀取失敗的情況
