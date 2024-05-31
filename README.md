@@ -108,7 +108,7 @@ String ctc_output = tfliteInfer.greedyDecode(mdl_output, firstElements);
 The ctc_output is a pronunciation string separated by spaces, such as:  
 " kai1 qi3 tong1 zhi1 yan3 mian4 "  
 
-### 字串比較
+### String comparison
 This project has implemented a LevenshteinDistance class to calculate the difference between two strings.  
 ```
 int distance = LevenshteinDistance.computeLevenshteinDistance(ctc_output, str2);
