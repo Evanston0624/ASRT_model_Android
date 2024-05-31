@@ -17,7 +17,7 @@ import java.util.List;
 public class DataLoader {
     private static final String TAG = "DataLoader";
 
-    public static double[] readAsInt(Context context, int resourceId) {
+    public static double[] readAsDouble(Context context, int resourceId) {
         MediaExtractor extractor = new MediaExtractor();
         try {
             AssetFileDescriptor assetFileDescriptor = context.getResources().openRawResourceFd(resourceId);
@@ -77,13 +77,14 @@ public class DataLoader {
         Log.d(TAG, "intData-length：" + intData.length);
         return intData;
     }
-    public static float[][][][] prepareInput(float[][] inputData) {
+    public static float[][] prepareInput(float[][] inputData) {
         int batchSize = 1;
         int height = 1600;
         int width = 200;
         int depth = 1;
 
-        float[][][][] inputArray = new float[batchSize][height][width][depth];
+//        float[][] inputArray = new float[batchSize][height][width][depth];
+        float[][] inputArray = new float[height][width];
         int padding_length = height - inputData.length;
         int left_padding = padding_length / 2;
 
@@ -92,12 +93,12 @@ public class DataLoader {
             if (i >= left_padding && i < left_padding+inputData.length) {
                 float[] row = inputData[count];
                 for (int j = 0; j < width; j++) {
-                    inputArray[0][i][j][0] = row[j];
+                    inputArray[i][j] = row[j];
                 }
                 count += 1;
             }else {
                 for (int j = 0; j < width; j++) {
-                    inputArray[0][i][j][0] = 0.0f;
+                    inputArray[i][j] = 0.0f;
                 }
             }
         }

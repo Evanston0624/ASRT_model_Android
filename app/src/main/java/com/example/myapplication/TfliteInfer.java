@@ -14,7 +14,6 @@ public class TfliteInfer {
     private Interpreter interpreter;
     private static final String TAG = "Tflite";
 
-
     public void loadModel(AssetManager assetManager, String modelPath) {
         try {
             // 加载模型文件
@@ -29,29 +28,26 @@ public class TfliteInfer {
 
             // 创建解释器
             interpreter = new Interpreter(modelBuffer);
-            Log.d("Tflite", "模型加载成功");
+            Log.d("Tflite", "模型載入成功");
         } catch (IOException e) {
             Log.e("Tflite", "Error loading model: " + e.getMessage());
             e.printStackTrace();
         }
     }
-    public float[][] runInference(float[][][][] inputArray) {
+    public float[][] runInference(float[][] inputArray) {
         // 准备输入
-        ByteBuffer inputBuffer = ByteBuffer.allocateDirect(inputArray.length * inputArray[0].length *
-                inputArray[0][0].length * inputArray[0][0][0].length * Float.SIZE / Byte.SIZE);
+        ByteBuffer inputBuffer = ByteBuffer.allocateDirect(inputArray.length * inputArray[0].length * Float.SIZE / Byte.SIZE);
         inputBuffer.order(ByteOrder.nativeOrder());
-            int dim1 = inputArray[0].length;
-            int dim2 = inputArray[0][0].length;
-            for (int j = 0; j < inputArray[0].length; j++) {
-                for (int k = 0; k < inputArray[0][j].length; k++) {
-                    inputBuffer.putFloat(inputArray[0][j][k][0]);
-                }
+        for (float[] row : inputArray) {
+            for (float value : row) {
+                inputBuffer.putFloat(value);
             }
+        }
         inputBuffer.rewind();
         // 准备输出
         int batchSize = 1;
-        int outputShape = 200; // 根据输出张量的大小设置
-        int outputClass = 1431; // 根据输出张量的大小设置
+        int outputShape = 200;
+        int outputClass = 1431;
         ByteBuffer outputBuffer = ByteBuffer.allocateDirect(batchSize * outputShape*outputClass * Float.SIZE / Byte.SIZE);
         outputBuffer.order(ByteOrder.nativeOrder());
 
