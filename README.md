@@ -102,7 +102,7 @@ The ctc_decoder in this project needs to use the dict.txt file used during train
 run ctc_decoder:  
 ```
 String[] firstElements = DataLoader.processFile(this, "dict/dict.txt");
-                String ctc_output = tfliteInfer.greedyDecode(mdl_output, firstElements);
+String ctc_output = tfliteInfer.greedyDecode(mdl_output, firstElements);
 ```
 
 The ctc_output is a pronunciation string separated by spaces, such as:  
