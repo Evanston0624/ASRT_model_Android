@@ -17,8 +17,7 @@ This project replicates the following components of ASRT on Android:
 
 ### Convert the TensorFlow model to TensorFlow Lite.
 
-If you want to convert the ASRT_model to ONNX, TensorFlow Lite, and Core ML, please refer to the readme.md at url :
-[Model Quantization] (https://github.com/Evanston0624/ASRT_model_Android/python_qtz/)
+If you want to convert the ASRT_model to ONNX, TensorFlow Lite, and Core ML, please refer to the readme.md at url : [Model_Quantization] (https://github.com/Evanston0624/ASRT_model_Android/tree/main/python_qtz)
  
 
 ### android studio project setting

@@ -37,11 +37,11 @@ The ASR model in this project is trained using the THCHS30, ST-CMDS, AIShell-1, 
 
 First, load the ASRT model:
 ```
-import qtz_convert
+from python_qtz import qtz_convert
 # you need to replace it with your model path. such as:
 # model_path = './ASRT/save_models/SpeechModel251bn/SpeechModel251bn.model.h5'
 # You can also use the ASRT model trained in this project, which has 1430 pronunciation categories.
-model_path = './ASRT/save_models/SpeechModel251bn_epoch40.model.h5'
+model_path = './python_qtz/save_models/SpeechModel251bn_epoch40.model.h5'
 
 trained_model, base_model = load_tf_model(model_path, OUTPUT_SIZE=1431)
 ```
@@ -49,7 +49,7 @@ OUTPUT_SIZE is the number of pronunciation categories output by ASRT. If you are
 
 Next, You can convert the ASRT model to a TF-lite model using the following code:
 ```
-save_path = './save_models/model.tflite'
+save_path = './python_qtz/save_models/model.tflite'
 # convert to tf-lite
 convert_tf_lite(base_model, save_path=save_path)
 ```
@@ -57,7 +57,7 @@ convert_tf_lite(base_model, save_path=save_path)
 You can convert the ASRT model to a onnx model using the following code:
 ```
 opset = 18
-save_path = f'./save_models/model{opset}.onnx'
+save_path = f'./python_qtz/save_models/model{opset}.onnx'
 # convert to onnx
 convert_tf_onnx(base_model, save_path, opset=opset)
 ```
@@ -66,11 +66,7 @@ If you need the complete code or more examples, you can refer to qtz_convert.py 
 ```
 if __name__ == '__main__':
 ...
-```
-
-All parameters of this project are based on the configurations used during ASRT training. If you have questions about the parameters or need to adjust them, you should make the corresponding adjustments when training the ASRT model.  
-Speech data format: sampling rate = 16000, pcm-16bit (value range from -32768 to 32767)  
-
+```  
 
 ### Running inference with ONNX and TF Lite models
 If you want to perform inference, you'll need to use the pronunciation list of ASRT (./ASRT/dict.txt). Please note that the phoneme list provided in this project differs from the original ASRT, and our model training data also varies from the original.  
@@ -81,20 +77,23 @@ The following code can be found in qtz_infer.py We will explain step by step wha
 
 load ONNX model:  
 ```
-import qtz_infer
-model_path = './save_models/model.tflite'
+from python_qtz import qtz_infer
+model_path = './python_qtz/save_models/model18.onnx'
 qtz_mdl = onnx_tool(model_path)
 ```
 
 or load tflite model:  
 ```
-import qtz_infer
-model_path = './save_models/model.tflite'
+from python_qtz import qtz_infer
+model_path = './python_qtz/save_models/model.tflite'
 qtz_mdl = tflite_tool(model_path)
 ```
 
 The data preprocessing in this project utilizes the code from [ASRT](https://github.com/nl8590687/ASRT_SpeechRecognition), with all rights belonging to them.
   
+All parameters of this project are based on the configurations used during ASRT training. If you have questions about the parameters or need to adjust them, you should make the corresponding adjustments when training the ASRT model.  
+Speech data format: sampling rate = 16000, pcm-16bit (value range from -32768 to 32767)
+
 Data preprocessing:  
 ```
 dp = data_preprocess()
