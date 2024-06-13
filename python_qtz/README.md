@@ -30,10 +30,9 @@ This requirements.txt is not streamlined; it includes ASRT and other dependencie
 pip install -r requirements.txt
 ```
 
-### Convert the TensorFlow model to TensorFlow Lite.
+### Convert the ASRT model to TensorFlow Lite or ONNX.
 If you want to convert the ASRT_model to ONNX, TensorFlow Lite, and Core ML, please refer to the readme.md at path ./python_qtz/.
 The ASR model in this project is trained using the THCHS30, ST-CMDS, AIShell-1, Primewords, MagicData, and Mozilla Common Voice 14.0 (TW) datasets, encompassing 1430 phonemes.  
-
 
 First, load the ASRT model:
 ```
@@ -62,12 +61,6 @@ save_path = f'./python_qtz/save_models/model{opset}.onnx'
 convert_tf_onnx(base_model, save_path, opset=opset)
 ```
 
-If you need the complete code or more examples, you can refer to qtz_convert.py and qtz_infer.py.  
-```
-if __name__ == '__main__':
-...
-```  
-
 ### Running inference with ONNX and TF Lite models
 If you want to perform inference, you'll need to use the pronunciation list of ASRT (./ASRT/dict.txt). Please note that the phoneme list provided in this project differs from the original ASRT, and our model training data also varies from the original.  
 
@@ -75,26 +68,26 @@ Next, you'll also need a test audio file.
 
 The following code can be found in qtz_infer.py We will explain step by step what it does.  
 
-load ONNX model:  
+#### load ONNX model:  
 ```
 from python_qtz import qtz_infer
 model_path = './python_qtz/save_models/model18.onnx'
 qtz_mdl = onnx_tool(model_path)
 ```
 
-or load tflite model:  
+#### or load tflite model:  
 ```
 from python_qtz import qtz_infer
 model_path = './python_qtz/save_models/model.tflite'
 qtz_mdl = tflite_tool(model_path)
 ```
 
+#### Data preprocessing: 
+
 The data preprocessing in this project utilizes the code from [ASRT](https://github.com/nl8590687/ASRT_SpeechRecognition), with all rights belonging to them.
   
 All parameters of this project are based on the configurations used during ASRT training. If you have questions about the parameters or need to adjust them, you should make the corresponding adjustments when training the ASRT model.  
-Speech data format: sampling rate = 16000, pcm-16bit (value range from -32768 to 32767)
-
-Data preprocessing:  
+Speech data format: sampling rate = 16000, pcm-16bit (value range from -32768 to 32767) 
 ```
 dp = data_preprocess()
 wav_signal, sample_rate = dp.read_wav_data(audio_path)
@@ -102,11 +95,17 @@ audio_features = dp.Spectrogram(wavsignal=wav_signal, fs=sample_rate)
 audio_features = dp.adaptive_padding(input_data=audio_features)
 ```
 
+#### Inference:  
 The speech features are fed into the model to obtain an output vector, which is then processed by the CTC decoder to obtain the final predicted pronunciation.  
-Inference:  
 ```
 dict_path = 'dict.txt'
 phoneme_dict = load_dict(dict_path)
 base_pred = qtz_mdl.infer(audio_features)
 print(ctc_decoder(base_pred, phoneme_dict))
 ```
+
+If you need the complete code or more examples, you can refer to qtz_convert.py and qtz_infer.py.  
+```
+if __name__ == '__main__':
+...
+```  
