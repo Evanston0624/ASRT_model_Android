@@ -56,11 +56,21 @@ public class MainActivity extends AppCompatActivity {
 
                 String[] firstElements = DataLoader.processFile(this, "dict/dict.txt");
                 String ctc_output = tfliteInfer.greedyDecode(mdl_output, firstElements);
-                Log.d(TAG, "ctc_output"+ctc_output);
+                ctc_output = LevenshteinDistance.RmLeadingAndTrailingSpaces(ctc_output);
 
-                String str2 = "kai1 qi3 tong1 zhi1 yan3 mian4";
+//                String str2 = "kai1 qi3 tong1 zhi1 yan3 mian4";
+//                String str2 = "a1 b1 c1 kai1 qi3 tong1 zhi1 yan3 mian4 d1 e1";
+                String str2 = "tong1 kai1 qi3 tong1 zhi1 yan3 mian4 tong1";
                 int distance = LevenshteinDistance.computeLevenshteinDistance(ctc_output, str2);
                 double similarity = LevenshteinDistance.similarity(ctc_output, str2);
+                int count_diff = LevenshteinDistance.wordDifference(ctc_output, str2);
+                double fuzzy_simi = LevenshteinDistance.findMostSimilarSegment(ctc_output, str2);
+                Log.d(TAG, "main_log tag:"+str2);
+                Log.d(TAG, "main_log opt:"+ctc_output);
+                Log.d(TAG, "main_log distance:"+distance);
+                Log.d(TAG, "main_log similarity:"+similarity);
+                Log.d(TAG, "main_log fuzzy_simi:"+fuzzy_simi);
+                Log.d(TAG, "main_log count_diff:"+count_diff);
 
 //                JsonReader.readJsonFromUrl(url, new JsonReader.JsonResponseCallback() {
 //                    @Override
