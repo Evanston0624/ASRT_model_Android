@@ -30,25 +30,28 @@ public class DataLoader {
         }
 
         float numSamples = getNumSamples(extractor);
+
+        Log.d(TAG, "DataLoader numSamples: " + numSamples);
         ByteBuffer audioData = readData(extractor, numSamples);
         Log.d(TAG, "音訊數據的剩餘樣本數量：" + audioData.remaining()/2);
 
         return convertToIntegerArray(audioData);
     }
 
-    private static int getNumSamples(MediaExtractor extractor) {
+    private static float getNumSamples(MediaExtractor extractor) {
         MediaFormat format = extractor.getTrackFormat(0);
         int sampleRate = format.getInteger(MediaFormat.KEY_SAMPLE_RATE);
         int durationUs = (int) format.getLong(MediaFormat.KEY_DURATION);
-        Log.d(TAG, "Sample rate: " + sampleRate);
-        Log.d(TAG, "Duration (us): " + durationUs);
+
+        Log.d(TAG, "DataLoader Sample rate: " + sampleRate);
+        Log.d(TAG, "DataLoader Duration (us): " + durationUs);
         durationUs = durationUs/1000;
         sampleRate = sampleRate/1000;
-        return durationUs*sampleRate;
+        return durationUs * sampleRate;
     }
 
     private static ByteBuffer readData(MediaExtractor extractor, float numSamples) {
-        ByteBuffer buffer = ByteBuffer.allocate((int) numSamples * 2); // 16-bit PCM, 2 bytes per sample
+        ByteBuffer buffer = ByteBuffer.allocate((int) numSamples *4); // 16-bit PCM, 2 bytes per sample
 
         extractor.selectTrack(0);
 
@@ -69,12 +72,10 @@ public class DataLoader {
         byteBuffer.rewind();
         byteBuffer.order(ByteOrder.LITTLE_ENDIAN); // assuming little-endian data
         double[] intData = new double[byteBuffer.remaining() / 2];
-        Log.d(TAG, "intData-length：" + intData.length);
         for (int i = 0; i < intData.length; i++) {
             double value = (double)byteBuffer.getShort();
             intData[i] = value; // 不進行無符號轉換
         }
-        Log.d(TAG, "intData-length：" + intData.length);
         return intData;
     }
     public static float[][] prepareInput(float[][] inputData) {

@@ -87,4 +87,14 @@ public class TfliteInfer {
         }
         return decoded.toString();
     }
+    public static String ensureSpaceAfterDigits(String input) {
+        // 去除输入字符串的首尾空格
+        input = input.trim();
+        String result = input;
+        // 使用正则表达式匹配数字后面不是空格的情况并插入空格
+//        String result = input.replaceAll("(\\d)(?=\\S)", "$1 ");
+
+        // 确保返回的字符串没有首尾空格
+        return result.trim();
+    }
 }
